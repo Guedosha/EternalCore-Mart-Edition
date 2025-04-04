@@ -31,44 +31,6 @@ class DeathMessageController implements Listener {
 
     @EventHandler
     void onPlayerDeath(PlayerDeathEvent event) {
-        Player player = event.getEntity();
-        event.setDeathMessage(null);
-
-        EntityDamageEvent damageCause = player.getLastDamageCause();
-
-        if (damageCause instanceof EntityDamageByEntityEvent causeByEntity && causeByEntity.getDamager() instanceof Player killer) {
-            this.noticeService.create()
-                .noticeOptional(translation -> RandomElementUtil.randomElement(translation.event().deathMessage()))
-                .placeholder("{PLAYER}", player.getName())
-                .placeholder("{KILLER}", killer.getName())
-                .onlinePlayers()
-                .send();
-            return;
-        }
-
-        if (damageCause != null) {
-            EntityDamageEvent.DamageCause cause = damageCause.getCause();
-            this.noticeService.create()
-                .noticeOptional(translation -> {
-                    List<Notice> notifications = translation.event().deathMessageByDamageCause().get(cause);
-
-                    if (notifications == null) {
-                        return RandomElementUtil.randomElement(translation.event().unknownDeathCause());
-                    }
-
-                    return RandomElementUtil.randomElement(notifications);
-                })
-                .placeholder("{PLAYER}", player.getName())
-                .placeholder("{CAUSE}", cause.name())
-                .onlinePlayers()
-                .send();
-            return;
-        }
-
-        this.noticeService.create()
-            .noticeOptional(translation -> RandomElementUtil.randomElement(translation.event().unknownDeathCause()))
-            .placeholder("{PLAYER}", player.getName())
-            .onlinePlayers()
-            .send();
+        
     }
 }
